@@ -12,7 +12,6 @@ const criarUsuario = async (ctx) => {
 			400
 		);
 	} else if (cadastroUsuario) {
-		console.log(cadastroUsuario);
 		return falhaRequisicao(ctx, 'Email já cadastrado.', 400);
 	}
 	const senha = hash;

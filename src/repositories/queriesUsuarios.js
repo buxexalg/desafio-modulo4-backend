@@ -1,12 +1,12 @@
 const Database = require('../utils/database');
 
-const inserirNovoUsuario = async (nome, email, senha) => {
+const inserirNovoUsuario = async (jsonUsuario) => {
 	const query = {
 		text: `insert into usuarios 
 		(nome, email, senha)
 		values
 		($1, $2, $3)`,
-		values: [nome, email, senha],
+		values: [jsonUsuario.nome, jsonUsuario.email, jsonUsuario.senha],
 	};
 
 	await Database.query(query);

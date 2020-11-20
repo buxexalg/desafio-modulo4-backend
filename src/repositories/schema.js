@@ -6,7 +6,7 @@ const Database = require('../utils/database');
 
 const schema = {
 	1: `CREATE TABLE IF NOT EXISTS usuarios (
-		id serial,
+		id_usuario serial,
 		nome varchar(255),
 		email varchar(255),
 		senha varchar(255)
@@ -51,6 +51,6 @@ const up = async (numeroSchema = null) => {
 	}
 };
 
-/* drop();
+/* drop(); */
 
-up(); */
+/* up(); */

@@ -16,9 +16,17 @@ const auth = async (ctx) => {
 	if (dadosUsuario) {
 		const comparison = await Password.check(senha, dadosUsuario.senha);
 		if (comparison) {
-			const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-				expiresIn: '1h',
-			});
+			const token = jwt.sign(
+				{
+					id: dadosUsuario.id,
+					email: dadosUsuario.email,
+					nome: dadosUsuario.nome,
+				},
+				process.env.JWT_SECRET,
+				{
+					expiresIn: '1h',
+				}
+			);
 			return sucessoRequisicao(ctx, { token }, 201);
 		}
 	}

@@ -12,12 +12,13 @@ const criarUsuario = async (ctx) => {
 			400
 		);
 	} else if (cadastroUsuario) {
-		return falhaRequisicao(ctx, 'Email já cadastrado.', 400);
+		return falhaRequisicao(ctx, 'Usuário já cadastrado.', 400);
 	}
 	const senha = hash;
 	const novoUsuario = { nome, email, senha };
-	await Query.inserirNovoUsuario(nome, email, senha);
-	return sucessoRequisicao(ctx, novoUsuario);
+	await Query.inserirNovoUsuario(novoUsuario);
+	const usuarioBd = await Query.retornaUsuario(email);
+	return sucessoRequisicao(ctx, { id: usuarioBd.id_usuario }, 201);
 };
 
 module.exports = { criarUsuario };

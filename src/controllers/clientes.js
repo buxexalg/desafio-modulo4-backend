@@ -31,7 +31,7 @@ const criarCliente = async (ctx) => {
 
 	const novoCliente = { nome, cpf, email, tel, idUsuario };
 	const clienteBd = await Query.inserirNovoCliente(novoCliente);
-	return sucessoRequisicao(ctx, { id: clienteBd.rows[0].idCliente }, 201);
+	return sucessoRequisicao(ctx, { id: clienteBd.rows[0].idcliente }, 201);
 };
 
 const editarCliente = async (ctx) => {
@@ -78,4 +78,43 @@ const editarCliente = async (ctx) => {
 	return sucessoRequisicao(ctx, dadosAEditar);
 };
 
-module.exports = { criarCliente, editarCliente };
+const listarEBuscarClientes = async (ctx) => {
+	const { clientesPorPagina = null, offset = null, busca = null } = ctx.query;
+
+	if (!ctx.state.idUsuario) {
+		return falhaRequisicao(
+			ctx,
+			'Faça login antes de cadastrar um cliente.',
+			400
+		);
+	}
+
+	const { idUsuario } = ctx.state;
+
+	if (clientesPorPagina && offset && !busca) {
+		const listaDeClientes = await Query.listarClientes({
+			clientesPorPagina,
+			offset,
+			idUsuario,
+		});
+
+		sucessoRequisicao(ctx, listaDeClientes);
+	} else if (clientesPorPagina && offset && busca) {
+		const listaDeClientes = await Query.buscarClientes({
+			clientesPorPagina,
+			offset,
+			idUsuario,
+			busca,
+		});
+
+		sucessoRequisicao(ctx, listaDeClientes);
+	} else {
+		return falhaRequisicao(
+			ctx,
+			'Insira corretamente todos os dados necessários',
+			400
+		);
+	}
+};
+
+module.exports = { criarCliente, editarCliente, listarEBuscarClientes };

@@ -6,24 +6,24 @@ const Database = require('../utils/database');
 
 const schema = {
 	1: `CREATE TABLE IF NOT EXISTS usuarios (
-		id_usuario serial,
+		idUsuario serial,
 		nome varchar(255),
 		email varchar(255),
 		senha varchar(255)
 	);`,
 	2: `CREATE TABLE IF NOT EXISTS clientes (
-		id_cliente serial,
-		id_usuario integer,
+		idCliente serial,
+		idUsuario integer,
 		nome varchar(255),
 		email varchar(255),
 		cpf varchar(255),
 		celular varchar(255)
 	);`,
 	3: `CREATE TABLE IF NOT EXISTS cobrancas (
-		id_cobranca serial,
-		id_cliente integer,
-		valor_cobranca integer,
-		descricao_cobranca varchar(255),
+		idCobranca serial,
+		idCliente integer,
+		valorCobranca integer,
+		descricaoCobranca varchar(255),
 		vencimento date,
 		status varchar(255)
 	);`,

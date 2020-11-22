@@ -3,13 +3,13 @@ const Database = require('../utils/database');
 const inserirNovoCliente = async (jsonCliente) => {
 	const query = {
 		text: `insert into clientes
-		(id_usuario, nome, email, cpf, celular)
+		(idusuario, nome, email, cpf, celular)
 		values
 		($1, $2, $3, $4, $5)
 		
 		returning *`,
 		values: [
-			jsonCliente.userId,
+			jsonCliente.idUsuario,
 			jsonCliente.nome,
 			jsonCliente.email,
 			jsonCliente.cpf,
@@ -53,15 +53,55 @@ const verificaSeClienteEstaAssociadoAoUsuario = async (jsonIds) => {
 	const query = {
 		text: `SELECT * from clientes
 		where
-			idCliente = $1
+			idcliente = $1
 			and
-			idUsuario = $2`,
+			idusuario = $2`,
 		values: [jsonIds.idCliente, jsonIds.idUsuario],
 	};
 
 	const result = await Database.query(query);
 
-	return result;
+	return result.rows;
+};
+
+const listarClientes = async (jsonQuerystring) => {
+	const query = {
+		text: `SELECT * from clientes
+			where
+				idusuario = $1
+			limit $2
+			offset $3`,
+		values: [
+			jsonQuerystring.idUsuario,
+			jsonQuerystring.clientesPorPagina,
+			jsonQuerystring.offset,
+		],
+	};
+
+	const result = await Database.query(query);
+
+	return result.rows;
+};
+
+const buscarClientes = async (jsonQuerystring) => {
+	const query = {
+		text: `SELECT * from clientes
+		where 
+			idusuario = $1 AND
+			(nome LIKE $2 or email LIKE $2 or cpf LIKE $2)
+		limit $3
+		offset $4`,
+		values: [
+			jsonQuerystring.idUsuario,
+			`%${jsonQuerystring.busca}%`,
+			jsonQuerystring.clientesPorPagina,
+			jsonQuerystring.offset,
+		],
+	};
+
+	const result = await Database.query(query);
+
+	return result.rows;
 };
 
 module.exports = {
@@ -69,4 +109,6 @@ module.exports = {
 	retornaCliente,
 	editaCliente,
 	verificaSeClienteEstaAssociadoAoUsuario,
+	listarClientes,
+	buscarClientes,
 };

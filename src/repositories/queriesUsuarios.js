@@ -5,11 +5,13 @@ const inserirNovoUsuario = async (jsonUsuario) => {
 		text: `insert into usuarios 
 		(nome, email, senha)
 		values
-		($1, $2, $3)`,
+		($1, $2, $3)
+		
+		returning *`,
 		values: [jsonUsuario.nome, jsonUsuario.email, jsonUsuario.senha],
 	};
 
-	await Database.query(query);
+	return Database.query(query);
 };
 
 const retornaUsuario = async (email) => {

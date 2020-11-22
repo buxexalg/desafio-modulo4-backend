@@ -18,7 +18,7 @@ const auth = async (ctx) => {
 		if (comparison) {
 			const token = jwt.sign(
 				{
-					id: dadosUsuario.idUsuario,
+					idUsuario: dadosUsuario.idusuario,
 					email: dadosUsuario.email,
 					nome: dadosUsuario.nome,
 				},

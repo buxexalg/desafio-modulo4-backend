@@ -12,5 +12,6 @@ router.post('/auth', Auth.auth);
 router.post('/usuarios', Password.encrypt, Usuarios.criarUsuario);
 
 router.post('/clientes', Session.verify, Clientes.criarCliente);
+router.put('/clientes', Session.verify, Clientes.editarCliente);
 
 module.exports = router;

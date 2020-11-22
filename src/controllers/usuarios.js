@@ -17,7 +17,7 @@ const criarUsuario = async (ctx) => {
 	const senha = hash;
 	const novoUsuario = { nome, email, senha };
 	const usuarioBd = await Query.inserirNovoUsuario(novoUsuario);
-	return sucessoRequisicao(ctx, { id: usuarioBd.rows[0].idUsuario }, 201);
+	return sucessoRequisicao(ctx, { id: usuarioBd.rows[0].idusuario }, 201);
 };
 
 module.exports = { criarUsuario };

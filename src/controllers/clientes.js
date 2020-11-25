@@ -117,4 +117,15 @@ const listarEBuscarClientes = async (ctx) => {
 	}
 };
 
-module.exports = { criarCliente, editarCliente, listarEBuscarClientes };
+const buscarClientePorId = async (id) => {
+	const informacoesClientes = await Query.buscarClientePorIdDoCliente(id);
+
+	return informacoesClientes;
+};
+
+module.exports = {
+	criarCliente,
+	editarCliente,
+	listarEBuscarClientes,
+	buscarClientePorId,
+};

@@ -104,6 +104,20 @@ const buscarClientes = async (jsonQuerystring) => {
 	return result.rows;
 };
 
+const buscarClientePorIdDoCliente = async (id) => {
+	const query = {
+		text: `SELECT * 
+		FROM 
+			clientes 
+		where 
+			idcliente = $1`,
+		values: [id],
+	};
+
+	const result = await Database.query(query);
+	return result.rows[0];
+};
+
 module.exports = {
 	inserirNovoCliente,
 	retornaCliente,
@@ -111,4 +125,5 @@ module.exports = {
 	verificaSeClienteEstaAssociadoAoUsuario,
 	listarClientes,
 	buscarClientes,
+	buscarClientePorIdDoCliente,
 };

@@ -55,6 +55,7 @@ const criarCobranca = async (ctx) => {
 			valor,
 			descricao,
 			vencimento,
+			linkDoBoleto: boleto.data.boleto_url,
 			status: 'AGUARDANDO',
 		});
 
@@ -75,4 +76,52 @@ const criarCobranca = async (ctx) => {
 	}
 };
 
-module.exports = { criarCobranca };
+const listarCobrancas = async (ctx) => {
+	const { cobrancasPorPagina = null, offset = null } = ctx.query;
+
+	if (!ctx.state.idUsuario) {
+		return falhaRequisicao(
+			ctx,
+			'Faça login antes de cadastrar um cliente.',
+			400
+		);
+	}
+
+	const { idUsuario } = ctx.state;
+
+	if (cobrancasPorPagina && offset) {
+		const listaDeCobrancas = await Query.listarCobranças(idUsuario);
+		sucessoRequisicao(ctx, listaDeCobrancas);
+	} else {
+		return falhaRequisicao(
+			ctx,
+			'Insira corretamente todos os dados necessários',
+			400
+		);
+	}
+};
+
+const pagaCobranca = async (ctx) => {
+	if (!ctx.state.idUsuario) {
+		return falhaRequisicao(
+			ctx,
+			'Faça login antes de cadastrar um cliente.',
+			400
+		);
+	}
+
+	const { idDaCobranca = null } = ctx.request.body;
+
+	if (idDaCobranca) {
+		Query.pagaCobranca(idDaCobranca);
+		sucessoRequisicao(ctx, 'Cobrança paga com sucesso');
+	} else {
+		return falhaRequisicao(
+			ctx,
+			'Insira corretamente todos os dados necessários',
+			400
+		);
+	}
+};
+
+module.exports = { criarCobranca, listarCobrancas, pagaCobranca };

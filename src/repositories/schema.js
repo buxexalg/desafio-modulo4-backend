@@ -23,6 +23,7 @@ const schema = {
 		idCobranca serial,
 		idCliente integer,
 		valorCobranca integer,
+		linkdoboleto varchar(255),
 		descricaoCobranca varchar(255),
 		vencimento date,
 		status varchar(255)

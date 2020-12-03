@@ -1,6 +1,8 @@
+/* eslint-disable consistent-return */
 const Query = require('../repositories/queriesCobrancas');
 const Pagarme = require('../utils/pagarme');
 const Clientes = require('./clientes');
+const Email = require('../utils/email');
 const { sucessoRequisicao, falhaRequisicao } = require('./response');
 
 const criarCobranca = async (ctx) => {
@@ -11,12 +13,14 @@ const criarCobranca = async (ctx) => {
 			400
 		);
 	}
+	const dataVencimento = new Date();
+
+	dataVencimento.setDate(dataVencimento.getDate() + 2);
 
 	const {
 		idDoCliente = null,
 		descricao = null,
 		valor = null,
-		vencimento = null,
 	} = ctx.request.body;
 	const idUsuarioLogado = ctx.state.idUsuario;
 
@@ -40,7 +44,7 @@ const criarCobranca = async (ctx) => {
 		idCliente: idDoCliente,
 		valor,
 		descricao,
-		vencimento,
+		dataVencimento,
 		nome,
 		email,
 		cpf,
@@ -54,7 +58,7 @@ const criarCobranca = async (ctx) => {
 			idCliente: idDoCliente,
 			valor,
 			descricao,
-			vencimento,
+			dataVencimento,
 			linkDoBoleto: boleto.data.boleto_url,
 			status: 'AGUARDANDO',
 		});
@@ -64,13 +68,13 @@ const criarCobranca = async (ctx) => {
 				idDoCliente,
 				descricao,
 				valor,
-				vencimento,
+				dataVencimento,
 				linkDoBoleto: boleto.data.boleto_url,
 				status: 'AGUARDANDO',
 			},
 		};
 
-		//Enviar email
+		Email.enviarEmail(email, boleto.data.boleto_url);
 
 		return sucessoRequisicao(ctx, cobranca, 201);
 	}

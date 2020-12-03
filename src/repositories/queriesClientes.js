@@ -66,11 +66,31 @@ const verificaSeClienteEstaAssociadoAoUsuario = async (jsonIds) => {
 
 const listarClientes = async (jsonQuerystring) => {
 	const query = {
-		text: `SELECT * from clientes
-			where
-				idusuario = $1
-			limit $2
-			offset $3`,
+		text: `
+		SELECT recebidas.idcliente,
+		recebidas.nome,
+        recebidas.cpf,
+        COALESCE(recebidas.cobrancasrecebidas, 0) as cobrancasrecebidas,
+        COALESCE(feitas.cobrancasfeitas, 0) as cobrancasfeitas
+			FROM
+			(SELECT *
+			FROM clientes
+			LEFT JOIN
+				(SELECT id_cliente,
+						sum(valorcobranca) AS cobrancasrecebidas
+				FROM cobrancas
+				WHERE status = 'AGUARDANDO'
+				GROUP BY id_cliente) AS tabelaFeitas ON idcliente = id_cliente) AS recebidas
+			LEFT JOIN
+			(SELECT id_cliente,
+					sum(valorcobranca) AS cobrancasFeitas
+			FROM cobrancas
+			WHERE status = 'PAGO'
+			GROUP BY id_cliente) AS feitas ON recebidas.idcliente = feitas.id_cliente
+			WHERE idusuario = $1
+			LIMIT $2
+			OFFSET $3;
+		`,
 		values: [
 			jsonQuerystring.idUsuario,
 			jsonQuerystring.clientesPorPagina,
@@ -83,9 +103,42 @@ const listarClientes = async (jsonQuerystring) => {
 	return result.rows;
 };
 
-const buscarClientes = async (jsonQuerystring) => {
+const listarTodosClientes = async (idUsuario) => {
 	const query = {
 		text: `SELECT * from clientes
+			where
+				idusuario = $1
+			`,
+		values: [idUsuario],
+	};
+
+	const result = await Database.query(query);
+	return result.rows;
+};
+
+const buscarClientes = async (jsonQuerystring) => {
+	const query = {
+		text: `
+		SELECT recebidas.idcliente,
+		recebidas.nome,
+        recebidas.cpf,
+        COALESCE(recebidas.cobrancasrecebidas, 0) as cobrancasrecebidas,
+        COALESCE(feitas.cobrancasfeitas, 0) as cobrancasfeitas
+			FROM
+			(SELECT *
+			FROM clientes
+			LEFT JOIN
+				(SELECT id_cliente,
+						sum(valorcobranca) AS cobrancasrecebidas
+				FROM cobrancas
+				WHERE status = 'AGUARDANDO'
+				GROUP BY id_cliente) AS tabelaFeitas ON idcliente = id_cliente) AS recebidas
+			LEFT JOIN
+			(SELECT id_cliente,
+					sum(valorcobranca) AS cobrancasFeitas
+			FROM cobrancas
+			WHERE status = 'PAGO'
+			GROUP BY id_cliente) AS feitas ON recebidas.idcliente = feitas.id_cliente
 		where 
 			idusuario = $1 AND
 			(nome LIKE $2 or email LIKE $2 or cpf LIKE $2)
@@ -118,6 +171,28 @@ const buscarClientePorIdDoCliente = async (id) => {
 	return result.rows[0];
 };
 
+const buscaClientesInadimplentes = async () => {
+	const query = {
+		text: `
+		SELECT id_cliente,
+		count(CASE
+			WHEN estaInadimplente THEN 1
+		END)
+    
+FROM
+(SELECT *,
+	    (vencimento > now()
+	    AND status = $1) AS estaInadimplente
+FROM cobrancas) AS inadimplentes
+GROUP BY id_cliente`,
+		values: ['AGUARDANDO'],
+	};
+
+	const result = await Database.query(query);
+
+	return result.rows;
+};
+
 module.exports = {
 	inserirNovoCliente,
 	retornaCliente,
@@ -126,4 +201,6 @@ module.exports = {
 	listarClientes,
 	buscarClientes,
 	buscarClientePorIdDoCliente,
+	listarTodosClientes,
+	buscaClientesInadimplentes,
 };

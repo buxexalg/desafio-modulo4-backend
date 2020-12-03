@@ -21,7 +21,6 @@ router.post('/cobrancas', Session.verify, Cobrancas.criarCobranca);
 router.get('/cobrancas', Session.verify, Cobrancas.listarCobrancas);
 router.put('/cobrancas', Session.verify, Cobrancas.pagaCobranca);
 
-
-router.get('/relatorios', Session.verify, Relatorios.gerarRelatorio);
+router.get('/relatorios', Session.verify, Relatorios.geraRelatorio);
 
 module.exports = router;

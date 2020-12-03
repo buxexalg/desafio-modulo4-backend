@@ -27,7 +27,11 @@ const auth = async (ctx) => {
 					expiresIn: '1h',
 				}
 			);
-			return sucessoRequisicao(ctx, { token }, 201);
+			return sucessoRequisicao(
+				ctx,
+				{ mensagem: 'Usuário logado com sucesso!', token },
+				201
+			);
 		}
 	}
 

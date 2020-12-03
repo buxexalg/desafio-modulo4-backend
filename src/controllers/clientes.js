@@ -1,5 +1,12 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-restricted-syntax */
 const Query = require('../repositories/queriesClientes');
 const { sucessoRequisicao, falhaRequisicao } = require('./response');
+const {
+	calculaNumeroDePaginas,
+	calculaPaginaAtual,
+} = require('../utils/contadorPaginas');
 
 const criarCliente = async (ctx) => {
 	if (!ctx.state.idUsuario) {
@@ -90,6 +97,8 @@ const listarEBuscarClientes = async (ctx) => {
 	}
 
 	const { idUsuario } = ctx.state;
+	const listaTodosOsClientes = await Query.listarTodosClientes(idUsuario);
+	const clientesInadimplentes = await Query.buscaClientesInadimplentes();
 
 	if (clientesPorPagina && offset && !busca) {
 		const listaDeClientes = await Query.listarClientes({
@@ -98,7 +107,31 @@ const listarEBuscarClientes = async (ctx) => {
 			idUsuario,
 		});
 
-		sucessoRequisicao(ctx, listaDeClientes);
+		listaDeClientes.forEach((cliente) => {
+			for (const item of clientesInadimplentes) {
+				if (item.id_cliente === cliente.idcliente && item.count > 0) {
+					cliente.estaInadimplente = true;
+				} else {
+					cliente.estaInadimplente = false;
+				}
+			}
+		});
+
+		for (const clientes of listaDeClientes) {
+			delete clientes.idcliente;
+		}
+
+		const paginaAtual = calculaPaginaAtual(offset);
+		const totalDePaginas = await calculaNumeroDePaginas(
+			listaTodosOsClientes,
+			clientesPorPagina
+		);
+
+		sucessoRequisicao(ctx, {
+			paginaAtual,
+			totalDePaginas,
+			clientes: listaDeClientes,
+		});
 	} else if (clientesPorPagina && offset && busca) {
 		const listaDeClientes = await Query.buscarClientes({
 			clientesPorPagina,
@@ -107,7 +140,30 @@ const listarEBuscarClientes = async (ctx) => {
 			busca,
 		});
 
-		sucessoRequisicao(ctx, listaDeClientes);
+		listaDeClientes.forEach((cliente) => {
+			for (const item of clientesInadimplentes) {
+				if (item.id_cliente === cliente.idcliente && item.count > 0) {
+					cliente.estaInadimplente = true;
+				} else {
+					cliente.estaInadimplente = false;
+				}
+			}
+		});
+
+		for (const clientes of listaDeClientes) {
+			delete clientes.idcliente;
+		}
+
+		const paginaAtual = calculaPaginaAtual(offset);
+		const totalDePaginas = await calculaNumeroDePaginas(
+			listaTodosOsClientes,
+			clientesPorPagina
+		);
+		sucessoRequisicao(ctx, {
+			paginaAtual,
+			totalDePaginas,
+			clientes: listaDeClientes,
+		});
 	} else {
 		return falhaRequisicao(
 			ctx,

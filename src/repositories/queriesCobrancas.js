@@ -1,6 +1,18 @@
 const Database = require('../utils/database');
 
+const verificaCobrancasVencidas = async () => {
+	const query = {
+		text: `UPDATE cobrancas
+	SET status = 'VENCIDO'
+	WHERE vencimento < now() and status = $1`,
+		values: ['AGUARDANDO'],
+	};
+
+	await Database.query(query);
+};
+
 const inserirNovaCobranca = async (jsonCobranca) => {
+	await verificaCobrancasVencidas();
 	const query = {
 		text: `insert into cobrancas
 		(id_cliente, valorcobranca, descricaocobranca, vencimento, status, linkdoboleto)
@@ -11,18 +23,17 @@ const inserirNovaCobranca = async (jsonCobranca) => {
 			jsonCobranca.idCliente,
 			jsonCobranca.valor,
 			jsonCobranca.descricao,
-			jsonCobranca.vencimento,
+			jsonCobranca.dataVencimento,
 			jsonCobranca.status,
 			jsonCobranca.linkDoBoleto,
 		],
 	};
 
-	console.log(jsonCobranca);
-
 	return Database.query(query);
 };
 
 const listarCobranças = async (id) => {
+	await verificaCobrancasVencidas();
 	const query = {
 		text: `SELECT
 				idcobranca, id_cliente, descricaocobranca, valorcobranca, vencimento, linkdoboleto, status 
@@ -40,12 +51,13 @@ const listarCobranças = async (id) => {
 };
 
 const pagaCobranca = async (idCobranca) => {
+	await verificaCobrancasVencidas();
 	const query = {
 		text: `UPDATE cobrancas
 		SET
 			status = $1
-		where idcobranca = $2`,
-		values: ['PAGO', idCobranca],
+		where idcobranca = $2 and status=$3`,
+		values: ['PAGO', idCobranca, 'AGUARDANDO'],
 	};
 
 	await Database.query(query);

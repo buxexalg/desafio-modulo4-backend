@@ -156,7 +156,7 @@ const listarEBuscarClientes = async (ctx) => {
 
 		const paginaAtual = calculaPaginaAtual(offset);
 		const totalDePaginas = await calculaNumeroDePaginas(
-			listaTodosOsClientes,
+			listaDeClientes,
 			clientesPorPagina
 		);
 		sucessoRequisicao(ctx, {

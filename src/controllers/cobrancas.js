@@ -3,6 +3,10 @@ const Query = require('../repositories/queriesCobrancas');
 const Pagarme = require('../utils/pagarme');
 const Clientes = require('./clientes');
 const Email = require('../utils/email');
+const {
+	calculaNumeroDePaginas,
+	calculaPaginaAtual,
+} = require('../utils/contadorPaginas');
 const { sucessoRequisicao, falhaRequisicao } = require('./response');
 
 const criarCobranca = async (ctx) => {
@@ -81,7 +85,11 @@ const criarCobranca = async (ctx) => {
 };
 
 const listarCobrancas = async (ctx) => {
-	const { cobrancasPorPagina = null, offset = null } = ctx.query;
+	const {
+		cobrancasPorPagina = null,
+		offset = null,
+		busca = null,
+	} = ctx.query;
 
 	if (!ctx.state.idUsuario) {
 		return falhaRequisicao(
@@ -93,9 +101,42 @@ const listarCobrancas = async (ctx) => {
 
 	const { idUsuario } = ctx.state;
 
-	if (cobrancasPorPagina && offset) {
-		const listaDeCobrancas = await Query.listarCobranças(idUsuario);
-		sucessoRequisicao(ctx, listaDeCobrancas);
+	const listaTodasAsCobranças = await Query.listarCobranças(idUsuario);
+
+	if (cobrancasPorPagina && offset && !busca) {
+		const listaDeCobrancas = await Query.listarCobrançasOffset({
+			idUsuario,
+			cobrancasPorPagina,
+			offset,
+		});
+		const paginaAtual = calculaPaginaAtual(offset);
+		const totalDePaginas = await calculaNumeroDePaginas(
+			listaTodasAsCobranças,
+			cobrancasPorPagina
+		);
+
+		sucessoRequisicao(ctx, {
+			paginaAtual,
+			totalDePaginas,
+			cobrancas: listaDeCobrancas,
+		});
+	} else if (cobrancasPorPagina && offset && busca) {
+		const listaDeCobrancas = await Query.listarCobrançasOffsetBusca({
+			idUsuario,
+			cobrancasPorPagina,
+			offset,
+		});
+		const paginaAtual = calculaPaginaAtual(offset);
+		const totalDePaginas = await calculaNumeroDePaginas(
+			listaDeCobrancas,
+			cobrancasPorPagina
+		);
+
+		sucessoRequisicao(ctx, {
+			paginaAtual,
+			totalDePaginas,
+			cobrancas: listaDeCobrancas,
+		});
 	} else {
 		return falhaRequisicao(
 			ctx,

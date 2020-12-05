@@ -161,13 +161,13 @@ Você pode achar mais informações sobre a instalação no site oficial do Node
 
 A inicialização do banco de dados pode ser feita através da inicialização em node do arquivo `./src/repositories/schema.js` adicionando `up()` na última linha. Para cadastrar as informações de um banco de dados, o arquivo `.env` pode ser utilizado, adicionando as seguintes informações:
 
-````
+```
 DB_HOST=
 DB_NAME=
 DB_USER=
 DB_PORT=
 DB_PW=
-````                                                                                                                                                           |
+```
 
 ### Outras dependências
 
@@ -183,4 +183,3 @@ Após instalar o Node, execute `$ npm install` para instalar as seguintes depend
 -   [Node-postgres](https://www.npmjs.com/package/pg)
 -   [Eslint](https://www.npmjs.com/package/eslint)
 -   [Prettier](https://www.npmjs.com/package/prettier)
-

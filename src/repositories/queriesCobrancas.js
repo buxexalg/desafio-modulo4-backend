@@ -1,5 +1,6 @@
 const Database = require('../utils/database');
 
+/* Query responsável por verificar cobrancas vencidas */
 const verificaCobrancasVencidas = async () => {
 	const query = {
 		text: `UPDATE cobrancas
@@ -11,6 +12,7 @@ const verificaCobrancasVencidas = async () => {
 	await Database.query(query);
 };
 
+/* Query responsável por inserir uma nova cobrança */
 const inserirNovaCobranca = async (jsonCobranca) => {
 	await verificaCobrancasVencidas();
 	const query = {
@@ -32,6 +34,7 @@ const inserirNovaCobranca = async (jsonCobranca) => {
 	return Database.query(query);
 };
 
+/* Query responsável por listar cobrancas de acordo com a querystring */
 const listarCobrançasOffset = async (jsonQuerystring) => {
 	await verificaCobrancasVencidas();
 	const query = {
@@ -56,6 +59,7 @@ const listarCobrançasOffset = async (jsonQuerystring) => {
 	return result.rows;
 };
 
+/* Query responsável por listar cobrancas de acordo com busca e querystrings */
 const listarCobrançasOffsetBusca = async (jsonQuerystring) => {
 	await verificaCobrancasVencidas();
 	const query = {
@@ -82,6 +86,7 @@ const listarCobrançasOffsetBusca = async (jsonQuerystring) => {
 	return result.rows;
 };
 
+/* Query responsável por listar todas as cobranças */
 const listarCobranças = async (id) => {
 	await verificaCobrancasVencidas();
 	const query = {
@@ -100,6 +105,7 @@ const listarCobranças = async (id) => {
 	return result.rows;
 };
 
+/* Query responsável por pagar a cobrança */
 const pagaCobranca = async (idCobranca) => {
 	await verificaCobrancasVencidas();
 	const query = {

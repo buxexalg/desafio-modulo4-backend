@@ -2,6 +2,8 @@ const axios = require('axios');
 
 require('dotenv').config();
 
+/* Função responsável por gerar o boleto */
+
 const gerarBoleto = async (jsonDadosUsuario) => {
 	try {
 		const boleto = await axios.post('https://api.pagar.me/1/transactions', {

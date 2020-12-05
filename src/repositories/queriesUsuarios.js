@@ -1,5 +1,6 @@
 const Database = require('../utils/database');
 
+/* Query responsável por inserir um usuario */
 const inserirNovoUsuario = async (jsonUsuario) => {
 	const query = {
 		text: `insert into usuarios 
@@ -14,6 +15,7 @@ const inserirNovoUsuario = async (jsonUsuario) => {
 	return Database.query(query);
 };
 
+/* Query responsável por retornar um usuario */
 const retornaUsuario = async (email) => {
 	const query = {
 		text: `select * from usuarios where email = $1`,

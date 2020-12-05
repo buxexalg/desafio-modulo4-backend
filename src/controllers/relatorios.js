@@ -4,6 +4,7 @@ const QueryClientes = require('../repositories/queriesClientes');
 const QueryCobrancas = require('../repositories/queriesCobrancas');
 const { sucessoRequisicao, falhaRequisicao } = require('./response');
 
+/* Função responsável gerar relatório de clientes adimplentes, inadimplentes e saldo dos mesmos */
 const contaAdimplentesEInadimplentesESaldo = async (idUsuario) => {
 	const clientesInadimplentes = await QueryClientes.buscaClientesInadimplentes();
 	let inadimplentes = 0;
@@ -34,6 +35,7 @@ const contaAdimplentesEInadimplentesESaldo = async (idUsuario) => {
 	};
 };
 
+/* Função responsável gerar relatório de quantidade de cobranças */
 const qtdDeCobrancas = async (idUsuario) => {
 	let pagas = 0;
 	let vencidas = 0;

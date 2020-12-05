@@ -1,3 +1,4 @@
+/* Calcula o número de páginas a serem exibidas na resposta da requisição. */
 const calculaNumeroDePaginas = async (listaDeClientes, clientesPorPagina) => {
 	const lista = await listaDeClientes;
 	const tamanhoListaDeClientes = await lista.length;
@@ -15,6 +16,7 @@ const calculaNumeroDePaginas = async (listaDeClientes, clientesPorPagina) => {
 	return paginas;
 };
 
+/* Calcula a página atual a ser exibidas na resposta da requisição. */
 const calculaPaginaAtual = (offset) => {
 	const paginaAtual = offset / 10 + 1;
 

@@ -1,6 +1,7 @@
 const Password = require('../utils/password');
 const { falhaRequisicao } = require('../controllers/response');
 
+/* Função responsável por encriptar amsenha */
 const encrypt = async (ctx, next) => {
 	const { senha = null } = ctx.request.body;
 

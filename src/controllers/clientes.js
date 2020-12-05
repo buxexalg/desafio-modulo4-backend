@@ -8,6 +8,7 @@ const {
 	calculaPaginaAtual,
 } = require('../utils/contadorPaginas');
 
+/* Função responsável por criar um cliente */
 const criarCliente = async (ctx) => {
 	if (!ctx.state.idUsuario) {
 		return falhaRequisicao(
@@ -85,6 +86,7 @@ const editarCliente = async (ctx) => {
 	return sucessoRequisicao(ctx, dadosAEditar);
 };
 
+/* Função responsável por listar e buscar um cliente */
 const listarEBuscarClientes = async (ctx) => {
 	const { clientesPorPagina = null, offset = null, busca = null } = ctx.query;
 
@@ -173,6 +175,7 @@ const listarEBuscarClientes = async (ctx) => {
 	}
 };
 
+/* Função responsável buscar um cliente pelo ID */
 const buscarClientePorId = async (id) => {
 	const informacoesClientes = await Query.buscarClientePorIdDoCliente(id);
 

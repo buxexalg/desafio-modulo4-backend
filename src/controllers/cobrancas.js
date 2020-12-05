@@ -9,6 +9,7 @@ const {
 } = require('../utils/contadorPaginas');
 const { sucessoRequisicao, falhaRequisicao } = require('./response');
 
+/* Função responsável por criar uma cobrança */
 const criarCobranca = async (ctx) => {
 	if (!ctx.state.idUsuario) {
 		return falhaRequisicao(
@@ -84,6 +85,7 @@ const criarCobranca = async (ctx) => {
 	}
 };
 
+/* Função responsável por listar uma cobrança */
 const listarCobrancas = async (ctx) => {
 	const {
 		cobrancasPorPagina = null,
@@ -146,6 +148,7 @@ const listarCobrancas = async (ctx) => {
 	}
 };
 
+/* Função responsável por pagar uma cobrança */
 const pagaCobranca = async (ctx) => {
 	if (!ctx.state.idUsuario) {
 		return falhaRequisicao(

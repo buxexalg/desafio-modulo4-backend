@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 
 require('dotenv').config();
 
+/* Configuração do Nodemailer */
 const config = {
 	host: process.env.MAILTRAP_HOST,
 	port: process.env.MAILTRAP_PORT,
@@ -15,7 +16,7 @@ const config = {
 const transport = nodemailer.createTransport(config);
 
 const enviarEmail = async (email, boleto) => {
-	let emailEnviado = await transport.sendMail({
+	const emailEnviado = await transport.sendMail({
 		from: 'Cubos Finanças" <financas@cubos.academy>',
 		to: email,
 		subject: 'O seu boleto chegou!',

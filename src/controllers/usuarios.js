@@ -1,6 +1,7 @@
 const Query = require('../repositories/queriesUsuarios');
 const { falhaRequisicao, sucessoRequisicao } = require('./response');
 
+/* Função responsável criar um usuário */
 const criarUsuario = async (ctx) => {
 	const { email = null, nome = null } = ctx.request.body;
 	const { hash } = ctx.state;

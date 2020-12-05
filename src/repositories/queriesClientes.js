@@ -1,5 +1,6 @@
 const Database = require('../utils/database');
 
+/* Query responsável por inserir um novo cliente */
 const inserirNovoCliente = async (jsonCliente) => {
 	const query = {
 		text: `insert into clientes
@@ -20,6 +21,7 @@ const inserirNovoCliente = async (jsonCliente) => {
 	return Database.query(query);
 };
 
+/* Query responsável por retornar os dados de um cliente */
 const retornaCliente = async (email) => {
 	const query = {
 		text: `select * from clientes where email = $1`,
@@ -30,6 +32,7 @@ const retornaCliente = async (email) => {
 	return result.rows.shift();
 };
 
+/* Query responsável por editar um cliente */
 const editaCliente = async (jsonCliente) => {
 	const query = {
 		text: `UPDATE clientes
@@ -49,6 +52,7 @@ const editaCliente = async (jsonCliente) => {
 	await Database.query(query);
 };
 
+/* Query responsável por verificar se o cliente está associado ao usuário */
 const verificaSeClienteEstaAssociadoAoUsuario = async (jsonIds) => {
 	const query = {
 		text: `SELECT * from clientes
@@ -64,6 +68,7 @@ const verificaSeClienteEstaAssociadoAoUsuario = async (jsonIds) => {
 	return result.rows;
 };
 
+/* Query responsável por listar clientes */
 const listarClientes = async (jsonQuerystring) => {
 	const query = {
 		text: `
@@ -103,6 +108,7 @@ const listarClientes = async (jsonQuerystring) => {
 	return result.rows;
 };
 
+/* Query responsável por listar todos os clientes */
 const listarTodosClientes = async (idUsuario) => {
 	const query = {
 		text: `SELECT * from clientes
@@ -116,6 +122,7 @@ const listarTodosClientes = async (idUsuario) => {
 	return result.rows;
 };
 
+/* Query responsável por buscar  clientes */
 const buscarClientes = async (jsonQuerystring) => {
 	const query = {
 		text: `
@@ -157,6 +164,7 @@ const buscarClientes = async (jsonQuerystring) => {
 	return result.rows;
 };
 
+/* Query responsável por listar clientes de acordo com o ID do usuário */
 const buscarClientePorIdDoCliente = async (id) => {
 	const query = {
 		text: `SELECT * 
@@ -171,6 +179,7 @@ const buscarClientePorIdDoCliente = async (id) => {
 	return result.rows[0];
 };
 
+/* Query responsável por buscar clientes inadimplentes */
 const buscaClientesInadimplentes = async () => {
 	const query = {
 		text: `

@@ -5,6 +5,7 @@ const Query = require('../repositories/queriesUsuarios');
 
 require('dotenv').config();
 
+/* Função responsável por autenticar */
 const auth = async (ctx) => {
 	const { email = null, senha = null } = ctx.request.body;
 

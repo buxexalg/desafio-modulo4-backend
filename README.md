@@ -167,7 +167,7 @@ DB_NAME=
 DB_USER=
 DB_PORT=
 DB_PW=
-```                                                                                                                                                            |
+````                                                                                                                                                           |
 
 ### Outras dependências
 
@@ -183,4 +183,4 @@ Após instalar o Node, execute `$ npm install` para instalar as seguintes depend
 -   [Node-postgres](https://www.npmjs.com/package/pg)
 -   [Eslint](https://www.npmjs.com/package/eslint)
 -   [Prettier](https://www.npmjs.com/package/prettier)
-````
+
